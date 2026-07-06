@@ -1,0 +1,6 @@
+补全下面的 Python 函数，要求处理异常输入，并给出简短注释：
+
+def batch_tokenize(texts, tokenizer, max_length):
+    """
+    Tokenize a list of strings for LLM inference.
+    """

@@ -1,0 +1,45 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+*.egg
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# === Virtual environment ===
+.venv/
+venv/
+env/
+
+# === Model weights (DO NOT COMMIT) ===
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.gguf
+*.ggml
+models/
+
+# === Generated results (keep dirs via .gitkeep, ignore content) ===
+results/env/*.txt
+results/raw/*
+results/tables/*
+results/reports/*
+results/plots/*.png
+results/plots/*.svg
+results/plots/*.pdf
+results/plots/*.csv
+
+# === IDE / Editor ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# === OS ===
+Thumbs.db
