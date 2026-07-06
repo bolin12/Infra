@@ -36,6 +36,7 @@ dependencies = [
     "seaborn>=0.13.0",
     "rich>=13.0.0",
     "tqdm>=4.66.0",
+    "gradio>=5.0.0",
 
     # === Utilities ===
     "einops>=0.8.0",
@@ -82,7 +83,14 @@ llama-cpp-python = ["cmake>=3.21", "scikit-build-core"]
 [[tool.uv.index]]
 name = "pytorch-cu124"
 url = "https://download.pytorch.org/whl/cu124"
-explicit = false
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu124" }
+torchvision = { index = "pytorch-cu124" }
+torchaudio = { index = "pytorch-cu124" }
+xformers = { index = "pytorch-cu124" }
+triton = { index = "pytorch-cu124" }
 
 [tool.ruff]
 line-length = 100
