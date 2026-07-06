@@ -26,25 +26,27 @@ mkdir -p "${OUT_DIR}"
   echo "## nvidia-smi topo -m"
   nvidia-smi topo -m || true
   echo
-  echo "## nvcc"
-  nvcc --version || true
+  echo "## docker"
+  docker --version || true
   echo
-  echo "## python"
-  python --version || true
+  echo "## docker image"
+  docker image inspect infra-trtllm:25.06 --format '{{.Id}} {{.Created}}' || true
   echo
-  echo "## pytorch"
-  python - <<'PY' || true
+  echo "## serving config"
+  if [ -f configs/serving/trtllm-single-gpu.env ]; then
+    sed -n '1,160p' configs/serving/trtllm-single-gpu.env
+  fi
+  echo
+  echo "## trtllm container version"
+  docker run --rm --gpus all --entrypoint /bin/bash infra-trtllm:25.06 -lc '
+python3 - <<'"'"'PY'"'"'
 try:
-    import torch
-    print("torch:", torch.__version__)
-    print("cuda_available:", torch.cuda.is_available())
-    print("cuda_version:", torch.version.cuda)
-    print("device_count:", torch.cuda.device_count())
-    for i in range(torch.cuda.device_count()):
-        print(f"device_{i}:", torch.cuda.get_device_name(i))
+    import tensorrt_llm
+    print("tensorrt_llm:", getattr(tensorrt_llm, "__version__", "unknown"))
 except Exception as exc:
-    print("torch_check_failed:", repr(exc))
+    print("trtllm_check_failed:", repr(exc))
 PY
+' || true
 } | tee "${OUT_FILE}"
 
 echo "saved: ${OUT_FILE}"

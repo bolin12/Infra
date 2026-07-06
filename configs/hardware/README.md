@@ -8,7 +8,8 @@
 - 显存大小；
 - 驱动版本；
 - CUDA 版本；
-- PyTorch 版本；
+- TensorRT-LLM 镜像版本；
+- TensorRT-LLM Python 包版本；
 - CPU；
 - 内存；
 - 磁盘类型；
@@ -21,7 +22,7 @@
 
 ```text
 rtx4060_local_YYYYMMDD.md
-runpod_rtx4090_YYYYMMDD.md
-lambda_a100_YYYYMMDD.md
-aws_p5_h100x8_YYYYMMDD.md
+rtx4090_YYYYMMDD.md
+a100_YYYYMMDD.md
+h100x8_YYYYMMDD.md
 ```

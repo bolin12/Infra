@@ -22,6 +22,8 @@ env/
 *.gguf
 *.ggml
 models/
+engines/
+model.cache
 
 # === Generated results (keep dirs via .gitkeep, ignore content) ===
 results/env/*.txt

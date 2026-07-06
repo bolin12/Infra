@@ -1,0 +1,4 @@
+{"task_id": 1, "prompt": "用一句中文说明 TensorRT-LLM 的作用。", "output_tokens": 64}
+{"task_id": 2, "prompt": "请列出本地单卡推理服务需要固定记录的三个关键参数。", "output_tokens": 96}
+{"task_id": 3, "prompt": "Explain briefly why a TensorRT engine should be rebuilt for a different GPU architecture.", "output_tokens": 96}
+{"task_id": 4, "prompt": "写一个简短的 HTTP OpenAI-compatible chat completion 请求说明。", "output_tokens": 96}

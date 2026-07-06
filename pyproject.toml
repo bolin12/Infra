@@ -1,96 +1,19 @@
 [project]
 name = "infra"
 version = "0.1.0"
-description = "LLM Inference Infra Lab — RTX 4060 to multi-GPU cluster benchmarking"
+description = "TensorRT-LLM serving infrastructure for single-GPU and cluster inference"
 requires-python = ">=3.12"
 dependencies = [
-    # === Core ML Framework (pre-built wheels) ===
-    "torch>=2.5.0",
-    "torchvision>=0.20.0",
-    "torchaudio>=2.5.0",
-    "transformers>=4.46.0",
-    "accelerate>=1.0.0",
-    "safetensors>=0.4.0",
-    "tokenizers>=0.20.0",
-    "datasets>=3.0.0",
-    "huggingface-hub>=0.26.0",
-
-    # === Quantization (pre-built wheels where available) ===
-    "bitsandbytes>=0.44.0",
-    "optimum>=1.22.0",
-
-    # === Inference Engines ===
-    "vllm>=0.6.0",
-    "sglang>=0.3.0",
-    "llama-cpp-python>=0.3.0",
-    "cmake>=3.21",
-
-    # === Attention Optimization (pre-built wheels) ===
-    "xformers>=0.0.28",
-    "triton>=3.0.0",
-
-    # === Benchmarking & Analysis ===
-    "numpy>=1.26.0",
-    "pandas>=2.2.0",
-    "matplotlib>=3.9.0",
-    "seaborn>=0.13.0",
     "rich>=13.0.0",
     "tqdm>=4.66.0",
-    "gradio>=5.0.0",
-
-    # === Utilities ===
-    "einops>=0.8.0",
-    "sentencepiece>=0.2.0",
-    "protobuf>=4.25.0",
-    "psutil>=5.9.0",
-    "py-cpuinfo>=9.0.0",
 ]
 
 [project.optional-dependencies]
-# Packages that require PyTorch at build time (CUDA extensions)
-# Install AFTER core deps: uv sync && uv sync --extra build-ext
-build-ext = [
-    "auto-gptq>=0.7.0",
-    "autoawq>=0.2.0",
-]
-
-# Flash Attention — needs CUDA toolkit match, may require source build
-flash-attn = ["flash-attn>=2.5.0"]
-
-# Development & linting
 dev = [
-    "ipython>=8.0.0",
-    "jupyterlab>=4.0.0",
     "ruff>=0.6.0",
     "pytest>=8.0.0",
-    "pytest-benchmark>=4.0.0",
+    "ipython>=8.0.0",
 ]
-
-# ExLlamaV2 — installed from GitHub; needs PyTorch at build time
-exllamav2 = ["exllamav2 @ git+https://github.com/turboderp/exllamav2.git"]
-
-# Full install
-all = ["infra[build-ext,flash-attn,dev,exllamav2]"]
-
-[tool.uv]
-# Default PyPI + PyTorch CUDA index for GPU wheels
-# CUDA 12.x wheels work with CUDA 13.3 driver (backward compatible)
-
-[tool.uv.extra-build-dependencies]
-# llama-cpp-python needs cmake at build time; uv installs it in the build env
-llama-cpp-python = ["cmake>=3.21", "scikit-build-core"]
-
-[[tool.uv.index]]
-name = "pytorch-cu124"
-url = "https://download.pytorch.org/whl/cu124"
-explicit = true
-
-[tool.uv.sources]
-torch = { index = "pytorch-cu124" }
-torchvision = { index = "pytorch-cu124" }
-torchaudio = { index = "pytorch-cu124" }
-xformers = { index = "pytorch-cu124" }
-triton = { index = "pytorch-cu124" }
 
 [tool.ruff]
 line-length = 100

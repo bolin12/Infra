@@ -1,89 +1,83 @@
-# LLM Inference Infra Lab
+# TensorRT-LLM Inference Infra
 
-从 RTX 4060 单卡推理练习，到高端 GPU、多卡和小型集群推理实验的学习路线、脚本、配置和实验记录。
-
-## 当前主线
-
-1. **RTX 4060 本地推理基本功**：llama.cpp、ExLlamaV2、vLLM、SGLang、量化、KV cache、speculative decoding。
-2. **可迁移 benchmark 套件**：同一套 prompt、模型、参数和结果格式，可以在 4060、4090、A100、H100 上重复运行。
-3. **高端 GPU 短租实验**：按小时租 4090/A100/H100，只跑准备好的实验，不在云上临时开发。
-4. **多 GPU / 集群推理练习**：tensor parallel、NCCL、topology、Ray/K3s/Docker Compose、serving 压测。
-
-## 工具链
-
-| 类别 | 工具 | 用途 |
-|------|------|------|
-| 包管理 | uv + Python 3.12 | 环境管理，[配置日志](./docs/devlogs/2026-07-06-python-env-setup.md) |
-| 推理引擎 | vLLM、SGLang、llama.cpp | 本地 & 云端 serving |
-| 加速库 | Triton、FlashInfer、xformers | kernel 编译 & 高效 attention |
-| Profile | Nsight Systems、Nsight Compute | 系统级 timeline & 核函数级分析 |
+这个仓库只保留 NVIDIA TensorRT-LLM serving 主线：单机单卡默认 `tp_size=1`，对外暴露 OpenAI-compatible API，后续再扩展多 GPU / Triton / 集群部署。
 
 ## 文档入口
 
-- [RTX 4060 推理加速学习路线](./rtx4060_llm_inference_acceleration_roadmap.md)
-- [高端 GPU & 集群推理路线](./high_end_gpu_and_cluster_inference_practice.md)
-- [开发日志](./docs/devlogs/)
+- [TensorRT-LLM Runbook](./docs/trtllm-runbook.md)
+- [Qwen 模型选择](./docs/qwen-trtllm-models.md)
+- [Serving 运行笔记](./docs/trtllm-serving-notes.md)
 
-## 实验计划
+## 快速启动
 
-### Phase 1：建立 4060 baseline
+```bash
+bash scripts/trtllm.sh build
+bash scripts/trtllm.sh download
+bash scripts/trtllm.sh bench-build
+bash scripts/trtllm.sh serve-engine-detached
+bash scripts/trtllm.sh health
+bash scripts/trtllm_smoke.sh
+```
 
-- [x] 确认本机 CUDA、驱动、Python、PyTorch 环境
-- [ ] 跑通 `scripts/collect_env.sh`，保存硬件信息
-- [ ] 选择 2B、4B、8B 三个模型作为第一批测试对象
-- [ ] 准备 GGUF Q4/Q5/Q8 权重
-- [ ] 跑通 llama.cpp 或 vLLM 的最小推理
-- [ ] 记录 TTFT、prefill tokens/s、decode tokens/s、显存占用
+默认配置在 [configs/serving/trtllm-single-gpu.env](./configs/serving/trtllm-single-gpu.env)。
 
-### Phase 2：量化格式对比
+## 当前生产路径
 
-- [ ] 固定同一模型、同一 prompt、同一 max tokens
-- [ ] 比较 Q4/Q5/Q8、AWQ、GPTQ、EXL2
-- [ ] 记录速度、显存、输出质量
+- 镜像：`nvcr.io/nvidia/tritonserver:25.06-trtllm-python-py3`
+- 服务：`trtllm-serve serve`
+- API：`/health`、`/v1/models`、`/v1/chat/completions`
+- 输入：HuggingFace checkpoint 或 TensorRT-LLM engine
+- 单卡参数：`TRTLLM_TP_SIZE=1`、`TRTLLM_PP_SIZE=1`、`TRTLLM_GPUS_PER_NODE=1`
 
-### Phase 3：KV cache 和长上下文
+## 常用命令
 
-- [ ] 测 context length：1k、4k、8k、16k
-- [ ] 记录显存曲线和 decode 速度衰减
-- [ ] 尝试 sliding window / attention sink
+```bash
+# 查看实际启动参数
+bash scripts/trtllm.sh config
 
-### Phase 4：Speculative decoding
+# 进入 TensorRT-LLM 容器
+bash scripts/trtllm.sh shell
 
-- [ ] 选择 draft model（0.6B/1.7B）+ target model（4B/8B Q4）
-- [ ] 测 acceptance rate 和速度对比
+# 下载当前配置的 HuggingFace checkpoint 到 HF cache
+bash scripts/trtllm.sh download
 
-### Phase 5：迁移到云 GPU
+# 使用官方 trtllm-bench 构建 benchmark engine 工作区
+bash scripts/trtllm.sh bench-build
 
-- [ ] 本地打包 benchmark 脚本和 prompt
-- [ ] 短租 4090/L40S → A100 → H100 逐级迁移
+# 使用持久化 engine 启动服务
+bash scripts/trtllm.sh serve-engine-detached
 
-### Phase 6：多卡和集群
+# 基于持久化 engine 跑官方 benchmark
+bash scripts/trtllm.sh bench-throughput
+bash scripts/trtllm.sh bench-latency
 
-- [ ] Docker Compose 模拟多 worker serving
-- [ ] Ray local cluster / K3s
-- [ ] vLLM/SGLang tensor parallel（TP=1/2/4/8）
+# 前台启动，适合看完整构建/加载日志
+bash scripts/trtllm.sh serve
+
+# 停止服务
+bash scripts/trtllm.sh stop
+
+# 查看服务日志
+bash scripts/trtllm.sh logs
+```
 
 ## 项目结构
 
 ```text
 .
 ├── README.md
-├── rtx4060_llm_inference_acceleration_roadmap.md
-├── high_end_gpu_and_cluster_inference_practice.md
+├── Dockerfile
 ├── configs/         ← 实验配置（models / hardware / benchmarks）
 ├── prompts/         ← 固定测试 prompt（中文问答、代码、摘要、数学）
-├── scripts/         ← 可重复执行脚本（采集环境、benchmark、压测）
-├── src/             ← Python/CUDA 代码（用脚本跑通后再沉淀到此）
-├── experiments/     ← 每个实验一个目录（README + commands.md + notes.md）
+├── scripts/         ← TensorRT-LLM serving、健康检查、环境采集
+├── engines/         ← TensorRT-LLM engine，本地生成，不提交
 ├── results/         ← 跨实验汇总（env / raw / tables / reports / plots）
-├── cloud/           ← 云 GPU 平台记录（runpod / vastai / lambda / modal）
-├── cluster/         ← 多 GPU & 集群实验（local-sim / multi-gpu / k8s / slurm）
-└── docs/            ← 长期笔记（devlogs、论文笔记、源码阅读）
+└── docs/            ← TensorRT-LLM serving 记录
 ```
 
 ## 基本原则
 
 - 模型权重不要提交到仓库
+- TensorRT engine 不提交到仓库
 - 原始结果、硬件信息、运行命令要保存
-- 每次实验必须固定 prompt、模型、后端版本、context length、batch size
-- 云 GPU 只用于跑准备好的实验，避免边租边写代码
+- 每次实验必须固定模型、engine、TensorRT-LLM 镜像、context length、batch size
