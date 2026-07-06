@@ -1,0 +1,8 @@
+{"task_id": 1, "prompt": "用一句中文说明 TensorRT-LLM engine 和 HuggingFace checkpoint 的区别。", "output_tokens": 64}
+{"task_id": 2, "prompt": "解释 TTFT 和 TPOT 的区别，要求简短。", "output_tokens": 64}
+{"task_id": 3, "prompt": "请列出本地单卡推理服务需要固定记录的三个关键参数。", "output_tokens": 96}
+{"task_id": 4, "prompt": "用三点说明为什么 benchmark 必须固定文本输入。", "output_tokens": 96}
+{"task_id": 5, "prompt": "给我一个 OpenAI-compatible chat completion 请求示例。", "output_tokens": 96}
+{"task_id": 6, "prompt": "如何判断并发继续提高已经没有收益？", "output_tokens": 96}
+{"task_id": 7, "prompt": "简述 KV cache 对 LLM 推理显存的影响。", "output_tokens": 96}
+{"task_id": 8, "prompt": "为什么 TensorRT engine 换 GPU 后通常需要重建？", "output_tokens": 96}

@@ -1,0 +1,8 @@
+{"task_id": 1, "prompt": "用一句中文说明 TensorRT-LLM engine 和 HuggingFace checkpoint 的区别。", "output_tokens": 64}
+{"task_id": 2, "prompt": "补全下面的 Python 函数，要求处理异常输入，并给出简短注释：\n\ndef batch_tokenize(texts, tokenizer, max_length):\n    \"\"\"Tokenize a list of strings for LLM inference.\"\"\"", "output_tokens": 384}
+{"task_id": 3, "prompt": "请总结下面长文档的核心观点，并列出三个可执行的工程建议：\n\nTensorRT-LLM profiling should separate prefill and decode. Prefill reads the full prompt, builds attention state, and fills KV cache. Decode generates one token at a time and repeatedly reads model weights plus cached keys and values. A short chat workload can hide prefill cost, while a long document summary workload can make TTFT dominate the user experience.\n\nWhen concurrency increases, LLM serving systems can batch more decode steps together. This often raises total output token throughput, but it may also increase request latency and KV cache pressure.", "output_tokens": 128}
+{"task_id": 4, "prompt": "写一份 TensorRT-LLM profiling 实验报告，包含结论和下一步。", "output_tokens": 512}
+{"task_id": 5, "prompt": "解释 TTFT 和 TPOT 的区别，要求简短。", "output_tokens": 64}
+{"task_id": 6, "prompt": "给出一个 Python 片段，读取 TensorRT-LLM benchmark JSON，打印 TTFT、TPOT、request throughput 和 output token throughput。", "output_tokens": 384}
+{"task_id": 7, "prompt": "请基于 8GB 单卡、Qwen 1.5B、max_seq_len 4096 的背景，说明并发和 KV cache 的关系。", "output_tokens": 256}
+{"task_id": 8, "prompt": "为什么量化可能提升吞吐，但仍然需要做输出质量检查？", "output_tokens": 256}

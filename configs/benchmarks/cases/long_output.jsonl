@@ -1,0 +1,8 @@
+{"task_id": 1, "prompt": "写一份 TensorRT-LLM 单卡推理 profiling 学习笔记，包含步骤、指标、判断方法和下一步实验计划。", "output_tokens": 512}
+{"task_id": 2, "prompt": "围绕 LLM 推理服务的吞吐、延迟、显存、输入长度和并发关系，写一段系统化说明。", "output_tokens": 512}
+{"task_id": 3, "prompt": "补全下面的 Python 函数，要求处理异常输入，并给出简短注释：\n\ndef batch_tokenize(texts, tokenizer, max_length):\n    \"\"\"Tokenize a list of strings for LLM inference.\"\"\"", "output_tokens": 384}
+{"task_id": 4, "prompt": "给出一份推理加速实验报告模板，包含环境、模型、engine、workload、指标、结论和风险。", "output_tokens": 512}
+{"task_id": 5, "prompt": "解释为什么量化可能提升吞吐，但仍然需要做输出质量检查。", "output_tokens": 384}
+{"task_id": 6, "prompt": "写一个 Bash 函数 latest_profile_report，返回 results/runs 里最新一轮 profiling 的 README.md 路径，并处理目录不存在的情况。", "output_tokens": 384}
+{"task_id": 7, "prompt": "请用工程实践角度说明 prefill-heavy 和 decode-heavy workload 应该分别看哪些指标。", "output_tokens": 512}
+{"task_id": 8, "prompt": "给出一个 Python 片段，读取 TensorRT-LLM benchmark JSON，打印 TTFT、TPOT、request throughput 和 output token throughput。", "output_tokens": 384}

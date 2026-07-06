@@ -4,12 +4,24 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CONFIG_FILE="${TRTLLM_CONFIG:-$PROJECT_ROOT/configs/serving/trtllm-single-gpu.env}"
 
+declare -A CALLER_TRTLLM_ENV=()
+while IFS='=' read -r name value; do
+    if [[ "$name" == TRTLLM_* ]]; then
+        CALLER_TRTLLM_ENV["$name"]="$value"
+    fi
+done < <(env)
+
 if [[ -f "$CONFIG_FILE" ]]; then
     set -a
     # shellcheck disable=SC1090
     source "$CONFIG_FILE"
     set +a
 fi
+
+for name in "${!CALLER_TRTLLM_ENV[@]}"; do
+    printf -v "$name" '%s' "${CALLER_TRTLLM_ENV[$name]}"
+    export "$name"
+done
 
 IMAGE="${TRTLLM_IMAGE:-infra-trtllm:25.06}"
 CONTAINER="${TRTLLM_CONTAINER:-infra-trtllm}"
