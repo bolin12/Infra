@@ -160,5 +160,6 @@ GPU MatMul 4096×4096: ✓
 ## 七、下一步
 
 1. 运行 `bash scripts/collect_env.sh` 保存完整硬件信息
-2. 下载测试模型 (2B/4B/8B)
-3. 开始 `experiments/01_rtx4060_baseline`
+2. Nsight Systems / Nsight Compute 已本地安装，profile 时用
+3. 下载测试模型 (2B/4B/8B)
+4. 开始 `experiments/01_rtx4060_baseline`
